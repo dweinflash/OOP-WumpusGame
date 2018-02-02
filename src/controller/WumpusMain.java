@@ -1,7 +1,11 @@
 package controller;
 
 /**
- * This class . . .
+ * @author - David Weinflash
+ * 
+ * This class is the application of the game. It will contain references to 
+ * the model and all views. This class' main responsibility is updating the screen with the
+ * game board.
  */
 
 import javafx.application.Application;

@@ -1,7 +1,11 @@
 package tests;
 
 /**
- * This class . . . 
+ * @author: David Weinflash
+ * 
+ * This class will test whether or not the map has been constructed correctly.
+ * It will also provide tests to check wrap-around, hunter location at start, wumpus
+ * warning signs, etc. 
  * 
  */
 
