@@ -2,20 +2,20 @@ package model;
 
 public class CaveRoom {
 
-	int x_pos;
-	int y_pos;
+	int row;
+	int column;
 	boolean visible;
 	char occupant;		// either O, W or P
 	char warning;		// either B, S or G
 	char gamePiece;		// either _, occupant, or warning
 	
-	CaveRoom(int x, int y)
+	CaveRoom(int r, int c)
 	{
 		// initialize gamePiece with piece '_'
 		// occupant and warning set to ' '
 		
-		x_pos = x;
-		y_pos = y;
+		row = r;
+		column = c;
 		gamePiece = '_';
 		visible = false;
 		occupant = ' ';
@@ -33,8 +33,8 @@ public class CaveRoom {
 	
 	public void setWumpus(CaveRoom[][] board)
 	{
-		int x = x_pos;
-		int y = y_pos;
+		int x = column;
+		int y = row;
 		CaveRoom room;
 		
 		// set room with Wumpus
@@ -55,8 +55,8 @@ public class CaveRoom {
 		}
 		
 		// right warnings
-		x = x_pos;
-		y = y_pos;
+		x = column;
+		y = row;
 	
 		for (int i = 0; i < 2; i++)
 		{
@@ -70,8 +70,8 @@ public class CaveRoom {
 		}
 		
 		// upper layer warnings
-		x = x_pos;
-		y = y_pos;
+		x = column;
+		y = row;
 		
 		if (y == 0)
 			y = 11;
@@ -95,8 +95,8 @@ public class CaveRoom {
 		}
 		
 		// lower layer warnings
-		x = x_pos;
-		y = y_pos;
+		x = column;
+		y = row;
 		
 		if (y == 11)
 			y = 0;
@@ -121,8 +121,8 @@ public class CaveRoom {
 		}
 		
 		// top warning
-		x = x_pos;
-		y = y_pos;
+		x = column;
+		y = row;
 		
 		if (y == 0)
 			y = 10;
@@ -135,7 +135,7 @@ public class CaveRoom {
 		room.setWarning('B');
 		
 		// bottom warning
-		y = y_pos;
+		y = row;
 		
 		if (y == 11)
 			y = 1;

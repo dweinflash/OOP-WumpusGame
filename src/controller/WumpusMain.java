@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.Map;
 
 public class WumpusMain extends Application {
 
@@ -23,6 +24,10 @@ public class WumpusMain extends Application {
   public void start(Stage stage) throws Exception {
     BorderPane pane = new BorderPane();
 
+    Map game = new Map(false, 2);
+    String gameBoard = game.toString();
+    System.out.println(gameBoard);
+    
     Scene scene = new Scene(pane, 690, 630);
     stage.setScene(scene);
     stage.show();
