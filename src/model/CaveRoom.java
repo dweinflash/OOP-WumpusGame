@@ -16,7 +16,7 @@ public class CaveRoom {
 		
 		row = r;
 		column = c;
-		gamePiece = '_';
+		gamePiece = ' ';
 		visible = false;
 		occupant = ' ';
 		warning = ' ';
@@ -148,6 +148,66 @@ public class CaveRoom {
 		room.setWarning('B');
 	}
 	
+	public void setPit(CaveRoom[][] board)
+	{
+		int x = column;
+		int y = row;
+		CaveRoom room;
+		
+		// set room with Pit
+		occupant = 'P';
+		this.setGamePiece();
+		
+		// set top warning
+		if (y == 0)
+			y = 11;
+		else
+			y--;
+		
+		room = board[y][x];
+		room.setWarning('S');
+		
+		// set bottom warning
+		y = row;
+		
+		if (y == 11)
+			y = 0;
+		else
+			y++;
+		
+		room = board[y][x];
+		room.setWarning('S');
+		
+		// set left warning
+		y = row;
+		
+		if (x == 0)
+			x = 11;
+		else
+			x--;
+		
+		room = board[y][x];
+		room.setWarning('S');
+		
+		// set right warning
+		x = column;
+		
+		if (x == 11)
+			x = 0;
+		else
+			x++;
+		
+		room = board[y][x];
+		room.setWarning('S');
+	}
+	
+	public void setHunter(CaveRoom[][] board)
+	{
+		occupant = 'O';
+		visible = true;
+		this.setGamePiece();
+	}
+	
 	public void setWarning(char sign)
 	{
 		// set to Goop if warning in current room is Blood and sign is Slime
@@ -161,6 +221,30 @@ public class CaveRoom {
 	
 	public char getGamePiece()
 	{
-		return gamePiece;
+		// ****** FOR TESTING PURPOSES - REMOVE ************
+		visible = true;
+		
+		if (visible == true)
+			return gamePiece;
+		else
+			return 'X';
+	}
+	
+	public boolean noWarning()
+	{
+		// return true if no warning in room
+		if (warning == ' ')
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean noOccupant()
+	{
+		// return true if no occupant in room
+		if (occupant == ' ')
+			return true;
+		else
+			return false;
 	}
 }

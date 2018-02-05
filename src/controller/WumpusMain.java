@@ -24,7 +24,7 @@ public class WumpusMain extends Application {
   public void start(Stage stage) throws Exception {
     BorderPane pane = new BorderPane();
 
-    Map game = new Map(false, 2);
+    Map game = new Map(true, 4);
     String gameBoard = game.toString();
     System.out.println(gameBoard);
     

@@ -19,13 +19,7 @@ public class Map extends Observable {
 	{
 		// if random false, create testable map
 		// numPits either 3, 4 or 5
-		
-		
 
-		// Add 3, 4 or 5 bottomless pits (no overlap with pit or Wumpus)
-		// Add Hunter to random position on board (no overlap with pit, Wumpus or warning)
-	
-		
 		// Construct a 12x12 grid of Cave Room objects
 		board = new CaveRoom[12][12];
 		
@@ -41,16 +35,69 @@ public class Map extends Observable {
 		
 		// Add Wumpus to random position on board
 		Random rand = new Random();
-		int randColumn = rand.nextInt(12);
 		int randRow = rand.nextInt(12);
+		int randColumn = rand.nextInt(12);
 		
 		// Add Wumpus to middle of map if testing game
 		if (random == true)
 			room = board[randRow][randColumn];
 		else
-			room = board[0][2];
+			room = board[8][11];
 		
 		room.setWumpus(board);
+		
+		// Add 3, 4 or 5 bottomless bits if random
+		// Follow spec example pits if not random
+		
+		int[] pitExampleRows = {1, 1, 10, 11};
+		int[] pitExampleCols = {7, 9, 10, 2};
+		
+		// random pits
+		if (random == true)
+		{
+			for (int i = 0; i < numPits; i++)
+			{
+				while(room.noOccupant() == false)
+				{
+					randRow = rand.nextInt(12);
+					randColumn = rand.nextInt(12);
+					room = board[randRow][randColumn];
+				}
+				
+				room.setPit(board);
+			}
+		}
+		// spec example Pits
+		else
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				room = board[pitExampleRows[i]][pitExampleCols[i]];
+				room.setPit(board);
+			}
+		}
+		
+		// Add Hunter to random position on board
+		// Follow spec example Hunter if not random
+		
+		//random Hunter
+		if (random == true)
+		{
+			while(room.noOccupant() == false || room.noWarning() == false)
+			{
+				randRow = rand.nextInt(12);
+				randColumn = rand.nextInt(12);
+				room = board[randRow][randColumn];
+			}
+			
+			room.setHunter(board);
+		}
+		// spec example Hunter
+		else
+		{
+			room = board[4][4];
+			room.setHunter(board);
+		}
 		
 	}
 	
