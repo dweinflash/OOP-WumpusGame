@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.Observer;
+import java.util.Random;
+
 /**
  * @author - David Weinflash
  * 
@@ -13,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Map;
+import views.ConsoleView;
 
 public class WumpusMain extends Application {
 
@@ -20,16 +24,28 @@ public class WumpusMain extends Application {
     launch(args);
   }
 
+  private Map theGame;
+  private Observer consoleView;
+  
   @Override
   public void start(Stage stage) throws Exception {
-    BorderPane pane = new BorderPane();
+    // Remove for Iteration 1
+	//BorderPane pane = new BorderPane();
 
-    Map game = new Map(true, 4);
-    String gameBoard = game.toString();
-    System.out.println(gameBoard);
+	// Random number of Slime pits (3, 4 or 5)
+	Random rand = new Random();
+	int randMinus = rand.nextInt(3);
+	int numPits = 5 - randMinus;
+	
+    theGame = new Map(true, numPits);
     
-    Scene scene = new Scene(pane, 690, 630);
-    stage.setScene(scene);
-    stage.show();
+    // Set up views
+    consoleView = new ConsoleView(theGame);
+    theGame.addObserver(consoleView);
+    
+    // Remove for Iteration 1
+    //Scene scene = new Scene(pane, 690, 630);
+    //stage.setScene(scene);
+    //stage.show();
   }
 }

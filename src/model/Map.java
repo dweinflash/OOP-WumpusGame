@@ -13,7 +13,9 @@ import java.util.Random;
  */
 public class Map extends Observable {
 	
-	CaveRoom[][] board;
+	private CaveRoom[][] board;
+	private String gameMessage;
+	private int[] hunterRoomPos = new int[2];
 	
 	public Map(boolean random, int numPits)
 	{
@@ -91,19 +93,66 @@ public class Map extends Observable {
 			}
 			
 			room.setHunter(board);
+			hunterRoomPos[0] = randRow;
+			hunterRoomPos[1] = randColumn;
 		}
 		// spec example Hunter
 		else
 		{
 			room = board[4][4];
 			room.setHunter(board);
+			hunterRoomPos[0] = 4;
+			hunterRoomPos[1] = 4;
 		}
 		
+	}
+	
+	public void moveNorth()
+	{
+		// Remove Hunter from current room
+		// Add Hunter to room above
+		
+		CaveRoom room;
+		
+		int x = hunterRoomPos[1];
+		int y = hunterRoomPos[0];
+
+		room = board[y][x];
+		room.removeHunter(board);
+		board[y][x] = room;
+		
+		if (y == 0)
+			y = 11;
+		else
+			y = y - 1;
+		
+		room = board[y][x];
+		room.setHunter(board);
+		
+		hunterRoomPos[0] = y;
+		hunterRoomPos[1] = x;
+		
+		setChanged();
+		notifyObservers();
+		
+	}
+	
+	private void setGameMessage()
+	{
+		// Game Message includes warnings and game over message
+		// Does not include Arrow messages
+		
+		CaveRoom hunterRoom;
+		hunterRoom = board[hunterRoomPos[0]][hunterRoomPos[1]];
+		gameMessage = hunterRoom.getWarningMessage(board);
 	}
 	
 	@Override
 	public String toString()
 	{
+		// Determine Game Message given Hunter position
+		this.setGameMessage();
+		
 		// Display a string version of the current board
 		String map = "";
 		CaveRoom room;
@@ -123,6 +172,8 @@ public class Map extends Observable {
 					map += " ";
 			}
 		}
+		
+		map += gameMessage;
 		
 		return map;
 	}
