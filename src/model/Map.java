@@ -315,6 +315,11 @@ public class Map extends Observable {
 		gameOver = true;
 	}
 	
+	public CaveRoom[][] getBoard()
+	{
+		return board;
+	}
+	
 	@Override
 	public String toString()
 	{

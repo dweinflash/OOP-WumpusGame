@@ -211,6 +211,7 @@ public class CaveRoom {
 	
 	public String getWarningMessage(CaveRoom[][] board)
 	{
+		warningMessage = "";
 		String slimeWarning = "I can hear the wind.\n";
 		String bloodWarning = "I smell something foul.\n";
 		String pitWarning = "You fell down a bottomless pit. You lose.\n";
