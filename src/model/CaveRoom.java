@@ -9,6 +9,7 @@ public class CaveRoom {
 	char warning;			// either B, S or G
 	char gamePiece;			// either _, occupant, or warning
 	String warningMessage; 	// includes warnings and game over messages
+	boolean occOverlap;		// the Hunter is on top of W or P
 	
 	CaveRoom(int r, int c)
 	{
@@ -22,12 +23,15 @@ public class CaveRoom {
 		occupant = ' ';
 		warning = ' ';
 		warningMessage = "";
+		occOverlap = false;
 		
 	}
 	
 	private void setGamePiece()
 	{
-		if (occupant != ' ')
+		if (occOverlap == true)
+			gamePiece = 'O';
+		else if (occupant != ' ')
 			gamePiece = occupant;
 		else if (warning != ' ')
 			gamePiece = warning;
@@ -212,13 +216,6 @@ public class CaveRoom {
 		String pitWarning = "You fell down a bottomless pit. You lose.\n";
 		String wumpusWarning = "You walked into the Wumpus. You lose.\n";
 		
-		boolean pitNearby = false;
-		boolean wumpusNearby = false;
-		
-		CaveRoom room;
-		int x = column;
-		int y = row;
-		
 		// Walk into Wumpus - return loss
 		if (occupant == 'W')
 		{
@@ -246,283 +243,18 @@ public class CaveRoom {
 		
 			return warningMessage;
 		}
-		
-		// Wumpus left
-		if (x == 0)
-			x = 9;
-		else if (x == 1)
-			x = 10;
-		else
-			x = x - 3;
-		
-		for (int i = 0; i < 2; i++)
-		{
-			if (x == 11)
-				x = 0;
-			else
-				x++;
-			
-			room = board[y][x];
-			
-			if ((room.getWarning() == 'B' || room.getWarning() == 'G') && (wumpusNearby == false))
-			{
-				warningMessage += bloodWarning;
-				wumpusNearby = true;
-			}
-		}
-		
-		// Wumpus right
-		x = column;
-		
-		if (x == 11)
-			x = 2;
-		else if (x == 10)
-			x = 1;
-		else
-			x = x + 3;
 
-		for (int i = 0; i < 2; i++)
-		{
-			
-			if (x == 0)
-				x = 11;
-			else
-				x--;
-			
-			room = board[y][x];
-		
-			if ((room.getWarning() == 'B' || room.getWarning() == 'G') && (wumpusNearby == false))
-			{
-				warningMessage += bloodWarning;
-				wumpusNearby = true;
-			}
-		}
-		
-		// Wumpus first layer above
-		x = column;
-		
-		if (x == 0)
-			x = 9;
-		else if (x == 1)
-			x = 10;
-		else
-			x = x - 3;
-		
-		if (y == 0)
-			y = 11;
-		else
-			y = y - 1;
-		
-		for (int i = 0; i < 5; i++)
-		{
-			if (x == 11)
-				x = 0;
-			else
-				x++;
-			
-			room = board[y][x];
-			
-			if ((room.getWarning() == 'B' || room.getWarning() == 'G') && (wumpusNearby == false))
-			{
-				warningMessage += bloodWarning;
-				wumpusNearby = true;
-			}
-		}
-		
-		// Wumpus first layer below
-		x = column;
-		y = row;
-		
-		if (x == 0)
-			x = 9;
-		else if (x == 1)
-			x = 10;
-		else
-			x = x - 3;
-		
-		if (y == 11)
-			y = 0;
-		else
-			y = y + 1;
-		
-		for (int i = 0; i < 5; i++)
-		{
-			if (x == 11)
-				x = 0;
-			else
-				x++;
-			
-			room = board[y][x];
-			
-			if ((room.getWarning() == 'B' || room.getWarning() == 'G') && (wumpusNearby == false))
-			{
-				warningMessage += bloodWarning;
-				wumpusNearby = true;
-			}
-		}
-		
-		// Wumpus second layer above
-		x = column;
-		y = row;
-		
-		if (x == 0)
-			x = 9;
-		else if (x == 1)
-			x = 10;
-		else
-			x = x - 3;
-		
-		if (y == 0)
-			y = 10;
-		else if (y == 1)
-			y = 11;
-		else
-			y = y - 2;
-		
-		for (int i = 0; i < 5; i++)
-		{
-			if (x == 11)
-				x = 0;
-			else
-				x++;
-			
-			room = board[y][x];
-			
-			if ((room.getWarning() == 'B' || room.getWarning() == 'G') && (wumpusNearby == false))
-			{
-				warningMessage += bloodWarning;
-				wumpusNearby = true;
-			}
-		}
-		
-		// Wumpus second layer below
-		x = column;
-		y = row;
-		
-		if (x == 0)
-			x = 9;
-		else if (x == 1)
-			x = 10;
-		else
-			x = x - 3;
-		
-		if (y == 11)
-			y = 1;
-		else if (y == 10)
-			y = 0;
-		else
-			y = y + 2;
-		
-		for (int i = 0; i < 5; i++)
-		{
-			if (x == 11)
-				x = 0;
-			else
-				x++;
-			
-			room = board[y][x];
-			
-			if ((room.getWarning() == 'B' || room.getWarning() == 'G') && (wumpusNearby == false))
-			{
-				warningMessage += bloodWarning;
-				wumpusNearby = true;
-			}
-		}
-		
-		
-		// Pit above
-		x = column;
-		y = row;
-		
-		if (x == 0)
-			x = 10;
-		else
-			x = x - 2;
-		
-		if (y == 0)
-			y = 11;
-		else
-			y = y - 1;
-		
-		for (int i = 0; i < 3; i++)
-		{
-			if (x == 11)
-				x = 0;
-			else
-				x++;
-			
-			room = board[y][x];
-			
-			if ((room.getWarning() == 'S' || room.getWarning() == 'G') && (pitNearby == false))
-			{
-				warningMessage += slimeWarning;
-				pitNearby = true;
-			}
-		}
-		
-		// Pit across
-		x = column;
-		y = row;
-		
-		if (x == 0)
-			x = 10;
-		else
-			x = x - 2;
-		
-		for (int i = 0; i < 3; i++)
-		{
-			if (x == 11)
-				x = 0;
-			else
-				x++;
-			
-			room = board[y][x];
-			
-			if ((room.getWarning() == 'S' || room.getWarning() == 'G') && (pitNearby == false))
-			{
-				warningMessage += slimeWarning;
-				pitNearby = true;
-			}
-		}
-		
-		// Pit below
-		x = column;
-		y = row;
-		
-		if (x == 0)
-			x = 10;
-		else
-			x = x - 2;
-		
-		if (y == 11)
-			y = 0;
-		else
-			y = y + 1;
-		
-		for (int i = 0; i < 3; i++)
-		{
-			if (x == 11)
-				x = 0;
-			else
-				x++;
-			
-			room = board[y][x];
-			
-			if ((room.getWarning() == 'S' || room.getWarning() == 'G') && (pitNearby == false))
-			{
-				warningMessage += slimeWarning;
-				pitNearby = true;
-			}
-		}
-		
-		
 		return warningMessage;
 		
 	}
 	
 	public void setHunter(CaveRoom[][] board)
 	{
-		occupant = 'O';
+		if (occupant == ' ')
+			occupant = 'O';
+		else
+			occOverlap = true;
+		
 		visible = true;
 		this.setGamePiece();
 	}
@@ -547,7 +279,7 @@ public class CaveRoom {
 	
 	public char getGamePiece()
 	{
-		// ****** FOR TESTING PURPOSES - REMOVE ************
+		// ****** VISIBLE TRUE FOR TESTING ************
 		//visible = true;
 		
 		if (visible == true)

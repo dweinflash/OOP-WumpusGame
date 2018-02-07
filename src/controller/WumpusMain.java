@@ -42,6 +42,8 @@ public class WumpusMain extends Application {
     // Set up views
     consoleView = new ConsoleView(theGame);
     theGame.addObserver(consoleView);
+    ((ConsoleView)consoleView).startREPL();
+    
     
     // Remove for Iteration 1
     //Scene scene = new Scene(pane, 690, 630);

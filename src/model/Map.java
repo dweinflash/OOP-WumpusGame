@@ -2,6 +2,7 @@ package model;
 
 import java.util.Observable;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * @author - David Weinflash
@@ -16,6 +17,8 @@ public class Map extends Observable {
 	private CaveRoom[][] board;
 	private String gameMessage;
 	private int[] hunterRoomPos = new int[2];
+	private int[] wumpusRoomPos = new int[2];
+	boolean gameOver;
 	
 	public Map(boolean random, int numPits)
 	{
@@ -24,6 +27,7 @@ public class Map extends Observable {
 
 		// Construct a 12x12 grid of Cave Room objects
 		board = new CaveRoom[12][12];
+		gameOver = false;
 		
 		CaveRoom room;
 		for (int row = 0; row < 12; row++)
@@ -42,9 +46,17 @@ public class Map extends Observable {
 		
 		// Add Wumpus to middle of map if testing game
 		if (random == true)
+		{
 			room = board[randRow][randColumn];
+			wumpusRoomPos[0] = randRow;
+			wumpusRoomPos[1] = randColumn;
+		}
 		else
+		{
 			room = board[8][11];
+			wumpusRoomPos[0] = 8;
+			wumpusRoomPos[1] = 11;
+		}
 		
 		room.setWumpus(board);
 		
@@ -132,8 +144,154 @@ public class Map extends Observable {
 		hunterRoomPos[0] = y;
 		hunterRoomPos[1] = x;
 		
-		setChanged();
-		notifyObservers();
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public void moveSouth()
+	{
+		// Remove Hunter from current room
+		// Add Hunter to room below
+		
+		CaveRoom room;
+		
+		int x = hunterRoomPos[1];
+		int y = hunterRoomPos[0];
+
+		room = board[y][x];
+		room.removeHunter(board);
+		board[y][x] = room;
+		
+		if (y == 11)
+			y = 0;
+		else
+			y = y + 1;
+		
+		room = board[y][x];
+		room.setHunter(board);
+		
+		hunterRoomPos[0] = y;
+		hunterRoomPos[1] = x;
+		
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public void moveWest()
+	{
+		// Remove Hunter from current room
+		// Add Hunter to room on left
+		
+		CaveRoom room;
+		
+		int x = hunterRoomPos[1];
+		int y = hunterRoomPos[0];
+
+		room = board[y][x];
+		room.removeHunter(board);
+		board[y][x] = room;
+		
+		if (x == 0)
+			x = 11;
+		else
+			x = x - 1;
+		
+		room = board[y][x];
+		room.setHunter(board);
+		
+		hunterRoomPos[0] = y;
+		hunterRoomPos[1] = x;
+		
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public void moveEast()
+	{
+		// Remove Hunter from current room
+		// Add Hunter to room on right
+		
+		CaveRoom room;
+		
+		int x = hunterRoomPos[1];
+		int y = hunterRoomPos[0];
+
+		room = board[y][x];
+		room.removeHunter(board);
+		board[y][x] = room;
+		
+		if (x == 11)
+			x = 0;
+		else
+			x = x + 1;
+		
+		room = board[y][x];
+		room.setHunter(board);
+		
+		hunterRoomPos[0] = y;
+		hunterRoomPos[1] = x;
+		
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public void shootArrow(boolean consoleView, Scanner sc)
+	{
+		boolean validInput = false;
+		String move = "";
+		
+		int x = hunterRoomPos[1];
+		int y = hunterRoomPos[0];
+		
+		if (consoleView == true)
+		{		
+			while (!validInput)
+			{
+				System.out.print("Shoot (n, e, s, w)? ");
+			
+				move = sc.nextLine().toLowerCase();
+			
+				if (!(move.equals("n") || move.equals("e") || move.equals("s") || 
+					move.equals("w")))
+				{
+					System.out.println("Invalid move.");
+					continue;
+				}
+				else
+					validInput = true;
+			}
+		}
+		
+		if (move.equals("n") || move.equals("s"))
+		{
+			if (wumpusRoomPos[1] != x)
+			{
+				System.out.println("You just shot yourself. You lose.");
+				sc.close();
+				System.exit(0);
+			}
+			else
+			{
+				System.out.println("Your arrow hit the wumpus. You win.");
+				sc.close();
+				System.exit(0);
+			}
+		}
+		else
+		{
+			if (wumpusRoomPos[0] != y)
+			{
+				System.out.println("You just shot yourself. You lose.");
+				sc.close();
+				System.exit(0);
+			}
+			else
+			{
+				System.out.println("Your arrow hit the wumpus. You win.");
+				sc.close();
+				System.exit(0);
+			}
+		}
 		
 	}
 	
@@ -147,11 +305,30 @@ public class Map extends Observable {
 		gameMessage = hunterRoom.getWarningMessage(board);
 	}
 	
+	public boolean getGameOver()
+	{
+		return gameOver;
+	}
+	
+	private void gameOver()
+	{
+		gameOver = true;
+	}
+	
 	@Override
 	public String toString()
 	{
+		String pitWarning = "You fell down a bottomless pit. You lose.\n";
+		String wumpusWarning = "You walked into the Wumpus. You lose.\n";
+		
 		// Determine Game Message given Hunter position
 		this.setGameMessage();
+		
+		// End game if Game Message is 'Fell into pit' or 'Walked into Wumpus'
+		if (gameMessage.equals(pitWarning) || gameMessage.equals(wumpusWarning))
+		{
+			this.gameOver();
+		}
 		
 		// Display a string version of the current board
 		String map = "";

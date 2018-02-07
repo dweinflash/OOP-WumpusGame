@@ -9,24 +9,24 @@ import model.Map;
 public class ConsoleView implements Observer {
 
 	private Map theGame;
+	private boolean endREPL;
 	
 	public ConsoleView(Map board)
 	{
 		theGame = board;
 		System.out.println(theGame);
-		startREPL();
+		endREPL = false;
 	}
 	
 	public void startREPL()
 	{
-		boolean gameOver = false;
 		Scanner sc = new Scanner(System.in);
 		String move = "";
 		
-		while (!gameOver)
+		while (!endREPL)
 		{
 			System.out.print("Move (n, e, s, w, arrow)? ");
-			move = sc.nextLine();
+			move = sc.nextLine().toLowerCase();
 			
 			if (!(move.equals("n") || move.equals("e") || move.equals("s") || 
 					move.equals("w") || move.equals("arrow")))
@@ -39,25 +39,37 @@ public class ConsoleView implements Observer {
 			{
 				case "n":
 					theGame.moveNorth();
-					System.out.println(theGame);
 					break;
 				case "e":
+					theGame.moveEast();
 					break;
 				case "s":
+					theGame.moveSouth();
 					break;
 				case "w":
+					theGame.moveWest();
 					break;
 				case "arrow":
+					theGame.shootArrow(true, sc);
 					break;
 			}
 			
 		}
+		
+		sc.close();
+		System.exit(0);
 	}
 	
-	@Override
+	
 	public void update(Observable arg0, Object arg1) {
 		
 		System.out.println(theGame);
+		
+		if (theGame.getGameOver() == true)
+		{
+			endREPL = true;
+		}
+		
 	}
 
 }
