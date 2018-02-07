@@ -6,6 +6,14 @@ import java.util.Scanner;
 
 import model.Map;
 
+/**
+ * @author - David Weinflash
+ * 
+ * This class is primarily responsible with collecting user input and displaying the board
+ * to stdout. Once valid input is collected, a move is made on the board, which then updates
+ * the ConsoleView class and prompts the class to display the new board on the console.
+ */
+
 public class ConsoleView implements Observer {
 
 	private Map theGame;
@@ -13,6 +21,7 @@ public class ConsoleView implements Observer {
 	
 	public ConsoleView(Map board)
 	{
+		// Display the current Map passed in to stdout.
 		theGame = board;
 		System.out.println(theGame);
 		endREPL = false;
@@ -20,6 +29,12 @@ public class ConsoleView implements Observer {
 	
 	public void startREPL()
 	{
+		/**
+		 * Collect valid user input until 1) user walks into pit/wumpus or
+		 * 2) user fires arrow. Input is not case sensitive. REPL will end
+		 * when theGame.gameOver == true.
+		 */
+		
 		Scanner sc = new Scanner(System.in);
 		String move = "";
 		
@@ -56,12 +71,18 @@ public class ConsoleView implements Observer {
 			
 		}
 		
+		// Exit here when user falls into pit or walks into Wumpus
 		sc.close();
 		System.exit(0);
 	}
 	
 	
 	public void update(Observable arg0, Object arg1) {
+		
+		/**
+		 * After move made on board, Map will update ConsoleView.
+		 * With update, display new board and determine if game over.
+		 */
 		
 		System.out.println(theGame);
 		

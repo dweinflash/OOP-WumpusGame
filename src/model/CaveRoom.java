@@ -1,5 +1,14 @@
 package model;
 
+/**
+ * @author - David Weinflash
+ * 
+ * This class will keep track of the Cave Room objects on the Map.
+ * The Cave Room will include occupants (O, W or P) and/or warnings (B, S, G).
+ * This class is primarily responsible with initializing Cave Rooms (methods to set warnings)
+ * and keeping track of the occupants of each room.
+ */
+
 public class CaveRoom {
 
 	int row;
@@ -13,8 +22,9 @@ public class CaveRoom {
 	
 	CaveRoom(int r, int c)
 	{
-		// initialize gamePiece with piece '_'
+		// initialize gamePiece with piece ' '
 		// occupant and warning set to ' '
+		// intialize visible as false
 		
 		row = r;
 		column = c;
@@ -24,11 +34,16 @@ public class CaveRoom {
 		warning = ' ';
 		warningMessage = "";
 		occOverlap = false;
-		
 	}
 	
 	private void setGamePiece()
 	{
+		/** Set the piece to represent the CaveRoom.
+		 * If Hunter on top of W or S, represent room as 'O'.
+		 * If no occupant, represent with warning.
+		 * Else room is empty and game piece is blank.
+		 */
+		
 		if (occOverlap == true)
 			gamePiece = 'O';
 		else if (occupant != ' ')
@@ -41,6 +56,10 @@ public class CaveRoom {
 	
 	public void setWumpus(CaveRoom[][] board)
 	{
+		/** Place the Wumpus on the board and set all Blood rooms adjacent.
+		 * Wumpus room is cur object, board passed in is Game Map.
+		 */
+		
 		int x = column;
 		int y = row;
 		CaveRoom room;
@@ -158,6 +177,10 @@ public class CaveRoom {
 	
 	public void setPit(CaveRoom[][] board)
 	{
+		/** Place the Pit on the board and set all Slime rooms adjacent.
+		 * Pit room is cur object, board passed in is Game Map.
+		 */
+		
 		int x = column;
 		int y = row;
 		CaveRoom room;
@@ -211,6 +234,11 @@ public class CaveRoom {
 	
 	public String getWarningMessage(CaveRoom[][] board)
 	{
+		/** Determine the message associated with the current Cave Room.
+		 * Message will be only one line, unless Cave Room has Warning 'G'.
+		 * 'G' rooms will include both Slime and Blood warnings.
+		 */
+		
 		warningMessage = "";
 		String slimeWarning = "I can hear the wind.\n";
 		String bloodWarning = "I smell something foul.\n";
@@ -251,6 +279,11 @@ public class CaveRoom {
 	
 	public void setHunter(CaveRoom[][] board)
 	{
+		/** Set the Hunter to the current room.
+		 * If current room already contains an occupant, set overlap to true.
+		 * Make room visible once it includes the Hunter.
+		 */
+		
 		if (occupant == ' ')
 			occupant = 'O';
 		else
@@ -262,6 +295,8 @@ public class CaveRoom {
 	
 	public void removeHunter(CaveRoom[][] board)
 	{
+		// Remove Hunter from the current room
+		
 		occupant = ' ';
 		visible = true;
 		this.setGamePiece();
@@ -280,7 +315,9 @@ public class CaveRoom {
 	
 	public char getGamePiece()
 	{
-		// ****** VISIBLE TRUE FOR TESTING ************
+		// return the game piece representing the current room on board
+		
+		// ***** VISIBLE TRUE FOR TESTING ONLY *****
 		//visible = true;
 		
 		if (visible == true)

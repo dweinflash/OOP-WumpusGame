@@ -9,10 +9,17 @@ import java.util.Scanner;
  * 
  * This class will keep track of the map and all objects on the map.
  * The map will be a 12x12 grid of Cave Room objects.
- * The map class will update WumpusMain as the game is played.
+ * The map class will update all views (observers) as the game is played.
  *
  */
 public class Map extends Observable {
+	
+	/**
+	* Construct a 12x12 map made up of Cave Room objects.
+	* If random is true, add Wumpus, Pits and Hunter to random Cave Rooms on map.
+	* If random is false, construct a map that matches the map in the spec.
+	* Testing will rely on random = false.
+	*/
 	
 	private CaveRoom[][] board;
 	private String gameMessage;
@@ -60,13 +67,11 @@ public class Map extends Observable {
 		
 		room.setWumpus(board);
 		
-		// Add 3, 4 or 5 bottomless bits if random
-		// Follow spec example pits if not random
-		
+		// Follow spec pit positions if Map not random
 		int[] pitExampleRows = {1, 1, 10, 11};
 		int[] pitExampleCols = {7, 9, 10, 2};
 		
-		// random pits
+		// random Pits
 		if (random == true)
 		{
 			for (int i = 0; i < numPits; i++)
@@ -91,7 +96,7 @@ public class Map extends Observable {
 			}
 		}
 		
-		// Add Hunter to random position on board
+		// Add Hunter to random, safe position on board
 		// Follow spec example Hunter if not random
 		
 		//random Hunter
@@ -121,6 +126,11 @@ public class Map extends Observable {
 	
 	public void moveNorth()
 	{
+		/**
+		* Update the Map so that Hunter is in room above current room.
+		* Notify observers once map has changed.
+		*/
+		
 		// Remove Hunter from current room
 		// Add Hunter to room above
 		
@@ -150,6 +160,11 @@ public class Map extends Observable {
 	
 	public void moveSouth()
 	{
+		/**
+		* Update the Map so that Hunter is in room below current room.
+		* Notify observers once map has changed.
+		*/
+		
 		// Remove Hunter from current room
 		// Add Hunter to room below
 		
@@ -179,6 +194,11 @@ public class Map extends Observable {
 	
 	public void moveWest()
 	{
+		/**
+		* Update the Map so that Hunter is in room left of current room.
+		* Notify observers once map has changed.
+		*/
+		
 		// Remove Hunter from current room
 		// Add Hunter to room on left
 		
@@ -208,6 +228,11 @@ public class Map extends Observable {
 	
 	public void moveEast()
 	{
+		/**
+		* Update the Map so that Hunter is in room right of current room.
+		* Notify observers once map has changed.
+		*/
+		
 		// Remove Hunter from current room
 		// Add Hunter to room on right
 		
@@ -237,6 +262,12 @@ public class Map extends Observable {
 	
 	public void shootArrow(boolean consoleView, Scanner sc)
 	{
+		/**
+		* Get input from user to specify in which direction to shoot the arrow.
+		* If Wumpus in direction of shot, user wins. Else, user loses.
+		* Close scanner and end game no matter outcome.
+		*/
+		
 		boolean validInput = false;
 		String move = "";
 		
@@ -245,6 +276,7 @@ public class Map extends Observable {
 		
 		if (consoleView == true)
 		{		
+			// Get valid user input for arrow direction
 			while (!validInput)
 			{
 				System.out.print("Shoot (n, e, s, w)? ");
@@ -262,6 +294,7 @@ public class Map extends Observable {
 			}
 		}
 		
+		// arrow shot vertical
 		if (move.equals("n") || move.equals("s"))
 		{
 			if (wumpusRoomPos[1] != x)
@@ -277,6 +310,7 @@ public class Map extends Observable {
 				System.exit(0);
 			}
 		}
+		// arrow shot horizontal
 		else
 		{
 			if (wumpusRoomPos[0] != y)
@@ -297,8 +331,11 @@ public class Map extends Observable {
 	
 	private void setGameMessage()
 	{
-		// Game Message includes warnings and game over message
-		// Does not include Arrow messages
+		/**
+		* Get message from Hunter's current location room.
+		* Game Message includes warnings and game over message.
+		* Does not include Arrow messages.
+		*/
 		
 		CaveRoom hunterRoom;
 		hunterRoom = board[hunterRoomPos[0]][hunterRoomPos[1]];
@@ -323,6 +360,12 @@ public class Map extends Observable {
 	@Override
 	public String toString()
 	{
+		/**
+		* Get any Cave Room messages given the Hunter's current position on board.
+		* Display the current board to stdout and any game messages below the board.
+		* If game message is Pit/Wumpus death, set gameOver = true.
+		*/
+		
 		String pitWarning = "You fell down a bottomless pit. You lose.\n";
 		String wumpusWarning = "You walked into the Wumpus. You lose.\n";
 		
@@ -360,6 +403,4 @@ public class Map extends Observable {
 		return map;
 	}
 	
-	
-  
 }
