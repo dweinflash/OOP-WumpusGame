@@ -20,6 +20,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Map;
@@ -46,7 +48,7 @@ public class WumpusMain extends Application {
     
 	/**
 	* Construct a stage for Iteration 2 of Hunt the Wumpus.
-	* For Iteration 1, start a new game and add a Console View as observer.
+	* For Iteration 1, start a new game and add a Text Area View as observer.
 	* Game will include a random number of pits, 3-5.
 	* The console view will begin the REPL, which will not end until game over.
 	*/
@@ -79,6 +81,7 @@ public class WumpusMain extends Application {
     */
     
     setViewTo(textAreaView);
+    scene.setOnKeyPressed(new KeyListener());
     stage.setScene(scene);
     stage.show();
   }
@@ -120,9 +123,27 @@ public class WumpusMain extends Application {
 	        setViewTo(textAreaView);
 	      //else if (text.equals("Image View"))
 	      //  setViewTo(textAreaView);
-	      //else if (text.equals("New Game"))
-	      //  theGame.startNewGame();
+	      else if (text.equals("New Game"))
+	        theGame.startNewGame();
   
 	    }
   	}
+  
+  private class KeyListener implements EventHandler<KeyEvent>  {
+
+	  	// Collect user input from arrow keys to move character in theGame
+	  
+	    @Override
+	    public void handle(KeyEvent event) {
+	      if(KeyCode.UP == event.getCode())
+	        theGame.moveNorth();
+	      if(KeyCode.RIGHT == event.getCode())
+	        theGame.moveEast();
+	      if(KeyCode.DOWN == event.getCode())
+	        theGame.moveSouth();
+	      if(KeyCode.LEFT== event.getCode())
+	        theGame.moveWest();
+	    }  
+  }
+  
 }

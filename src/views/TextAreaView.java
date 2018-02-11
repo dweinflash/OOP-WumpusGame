@@ -3,13 +3,16 @@ package views;
 import java.util.Observable;
 import java.util.Observer;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -33,6 +36,7 @@ public class TextAreaView extends BorderPane implements Observer {
 	private Button east;
 	private Button north;
 	private Button south;
+	private Font myFont;
 	
 	public TextAreaView(Map board)
 	{
@@ -40,9 +44,9 @@ public class TextAreaView extends BorderPane implements Observer {
 		
 		// Game Message
 		gameMsg = new Label("Safe for now");
-	    Font myFont = new Font("Courier", 24);
+	    myFont = new Font("Courier New", 24);
 		gameMsg.setFont(myFont);
-		BorderPane.setMargin(gameMsg, new Insets(0, 30, 40, 30));
+		BorderPane.setMargin(gameMsg, new Insets(0, 40, 90, 30));
 		
 		// Button Grid
 		rightGrid = new GridPane();
@@ -51,12 +55,12 @@ public class TextAreaView extends BorderPane implements Observer {
 		rightGrid.setVgap(10);
 
 	    BorderPane.setAlignment(rightGrid, Pos.CENTER_RIGHT);
-	    BorderPane.setMargin(rightGrid, new Insets(0, 95, 0, 0));
+	    BorderPane.setMargin(rightGrid, new Insets(0, 50, 0, 0));
 	    
 	    // text area
 	    textArea = new TextArea();
-	    textArea.setMaxHeight(480);
-	    textArea.setMaxWidth(280);
+	    textArea.setMaxHeight(350);
+	    textArea.setMaxWidth(380);
 	    textArea.setFont(myFont);
 	    
 	    BorderPane.setAlignment(textArea, Pos.TOP_LEFT);
@@ -68,10 +72,11 @@ public class TextAreaView extends BorderPane implements Observer {
 	    textArea.setText(theGame.toString());
 	    
 	    initializePane();
-		
+		textArea.setMouseTransparent(false);
+		textArea.setFocusTraversable(false);
 	}
 	
-	  private void initializePane() {
+	private void initializePane() {
 		    
 			/**
 			* Add button handler to direction button to register arrow move.
@@ -105,14 +110,59 @@ public class TextAreaView extends BorderPane implements Observer {
 			rightGrid.add(west, 0, 1);
 			rightGrid.add(east, 2, 1);
 			
-			//ButtonListener handler = new ButtonListener();
-			//button.setOnAction(handler);
+			ButtonListener handler = new ButtonListener();
+			west.setOnAction(handler);
+			east.setOnAction(handler);
+			south.setOnAction(handler);
+			north.setOnAction(handler);
 		  }
 	
+
+	private class ButtonListener implements EventHandler<ActionEvent> {
+
+			/**
+			* Shoot arrow in direction represented by button
+			* If a player wins, indicate winner in Game Message
+			*/
+		  
+		@Override
+		public void handle(ActionEvent e) 
+		{
+			// Get direction from source button
+			// Fire arrow in appropriate direction
+			
+			String dir = ((Button) e.getSource()).getText();
+			
+			switch(dir)
+			{
+				case "N":
+					theGame.shootArrow(dir);
+					break;
+				case "S":
+					theGame.shootArrow(dir);
+					break;
+				case "E":
+					theGame.shootArrow(dir);
+					break;
+				case "W":
+					theGame.shootArrow(dir);
+					break;
+			}
+		}
+		  
+	}
+	  
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
 		
+		String boardMessage = theGame.getGameMessage();
+		
+		if (boardMessage.equals(""))
+			boardMessage = "Safe for now";
+		
+		gameMsg.setText(boardMessage);
+		
+		textArea.setText(theGame.toString());
 	}
 
 }

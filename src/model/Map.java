@@ -23,9 +23,10 @@ public class Map extends Observable {
 	
 	private CaveRoom[][] board;
 	private String gameMessage;
-	private int[] hunterRoomPos = new int[2];
-	private int[] wumpusRoomPos = new int[2];
+	private int[] hunterRoomPos;
+	private int[] wumpusRoomPos;
 	boolean gameOver;
+	boolean arrowShot;
 	
 	public Map(boolean random, int numPits)
 	{
@@ -34,9 +35,19 @@ public class Map extends Observable {
 
 		// Construct a 12x12 grid of Cave Room objects
 		board = new CaveRoom[12][12];
+		hunterRoomPos = new int[2];
+		wumpusRoomPos = new int[2];
+		
+		this.initializeBoard(random, numPits);
+	}
+		
+	public void initializeBoard(boolean random, int numPits)
+	{	
 		gameOver = false;
+		arrowShot = false;
 		
 		CaveRoom room;
+		// initialize board with 124 Cave Room objects
 		for (int row = 0; row < 12; row++)
 		{
 			for (int col = 0; col < 12; col++)
@@ -124,12 +135,27 @@ public class Map extends Observable {
 		
 	}
 	
+	public void startNewGame()
+	{
+		// re-initialize the board to start a new game
+		Random rand = new Random();
+		int randMinus = rand.nextInt(3);
+		int numPits = 5 - randMinus;
+		
+		this.initializeBoard(true, numPits);
+	    setChanged();
+	    notifyObservers("startNewGame()");
+	}
+	
 	public void moveNorth()
 	{
 		/**
 		* Update the Map so that Hunter is in room above current room.
 		* Notify observers once map has changed.
 		*/
+		
+		if (gameOver == true)
+			return;
 		
 		// Remove Hunter from current room
 		// Add Hunter to room above
@@ -165,6 +191,9 @@ public class Map extends Observable {
 		* Notify observers once map has changed.
 		*/
 		
+		if (gameOver == true)
+			return;
+		
 		// Remove Hunter from current room
 		// Add Hunter to room below
 		
@@ -199,6 +228,9 @@ public class Map extends Observable {
 		* Notify observers once map has changed.
 		*/
 		
+		if (gameOver == true)
+			return;
+		
 		// Remove Hunter from current room
 		// Add Hunter to room on left
 		
@@ -209,7 +241,7 @@ public class Map extends Observable {
 
 		room = board[y][x];
 		room.removeHunter(board);
-		board[y][x] = room;
+		//board[y][x] = room;
 		
 		if (x == 0)
 			x = 11;
@@ -232,6 +264,9 @@ public class Map extends Observable {
 		* Update the Map so that Hunter is in room right of current room.
 		* Notify observers once map has changed.
 		*/
+		
+		if (gameOver == true)
+			return;
 		
 		// Remove Hunter from current room
 		// Add Hunter to room on right
@@ -260,54 +295,32 @@ public class Map extends Observable {
 		this.notifyObservers();
 	}
 	
-	public void shootArrow(boolean consoleView, Scanner sc)
+	public void shootArrow(String move)
 	{
 		/**
 		* Get input from user to specify in which direction to shoot the arrow.
 		* If Wumpus in direction of shot, user wins. Else, user loses.
-		* Close scanner and end game no matter outcome.
 		*/
 		
-		boolean validInput = false;
-		String move = "";
+		// Don't shoot arrow if game over
+		if (gameOver == true)
+			return;
+		
+		arrowShot = true;
 		
 		int x = hunterRoomPos[1];
 		int y = hunterRoomPos[0];
 		
-		if (consoleView == true)
-		{		
-			// Get valid user input for arrow direction
-			while (!validInput)
-			{
-				System.out.print("Shoot (n, e, s, w)? ");
-			
-				move = sc.nextLine().toLowerCase();
-			
-				if (!(move.equals("n") || move.equals("e") || move.equals("s") || 
-					move.equals("w")))
-				{
-					System.out.println("Invalid move.");
-					continue;
-				}
-				else
-					validInput = true;
-			}
-		}
-		
 		// arrow shot vertical
-		if (move.equals("n") || move.equals("s"))
+		if (move.equals("N") || move.equals("S"))
 		{
 			if (wumpusRoomPos[1] != x)
 			{
-				System.out.println("You just shot yourself. You lose.");
-				sc.close();
-				System.exit(0);
+				gameMessage = "You just shot yourself. You lose.\n";
 			}
 			else
 			{
-				System.out.println("Your arrow hit the wumpus. You win.");
-				sc.close();
-				System.exit(0);
+				gameMessage = "Your arrow hit the wumpus. You win.\n";
 			}
 		}
 		// arrow shot horizontal
@@ -315,17 +328,16 @@ public class Map extends Observable {
 		{
 			if (wumpusRoomPos[0] != y)
 			{
-				System.out.println("You just shot yourself. You lose.");
-				sc.close();
-				System.exit(0);
+				gameMessage = "You just shot yourself. You lose.\n";
 			}
 			else
 			{
-				System.out.println("Your arrow hit the wumpus. You win.");
-				sc.close();
-				System.exit(0);
+				gameMessage = "Your arrow hit the wumpus. You win.\n";
 			}
 		}
+		
+		this.setChanged();
+		this.notifyObservers();
 		
 	}
 	
@@ -333,10 +345,14 @@ public class Map extends Observable {
 	{
 		/**
 		* Get message from Hunter's current location room.
-		* Game Message includes warnings and game over message.
-		* Does not include Arrow messages.
+		* Game Message includes warnings, game over, and arrow messages.
 		*/
 		
+		// Game Message already set when player shot arrow
+		if (arrowShot == true)
+			return;
+		
+		// Get Game Message from current Cave Room
 		CaveRoom hunterRoom;
 		hunterRoom = board[hunterRoomPos[0]][hunterRoomPos[1]];
 		gameMessage = hunterRoom.getWarningMessage(board);
@@ -357,6 +373,12 @@ public class Map extends Observable {
 		return board;
 	}
 	
+	public String getGameMessage()
+	{
+		this.setGameMessage();
+		return gameMessage;
+	}
+	
 	@Override
 	public String toString()
 	{
@@ -368,12 +390,15 @@ public class Map extends Observable {
 		
 		String pitWarning = "You fell down a bottomless pit. You lose.\n";
 		String wumpusWarning = "You walked into the Wumpus. You lose.\n";
+		String arrowWin = "Your arrow hit the wumpus. You win.\n";
+		String arrowLose = "You just shot yourself. You lose.\n";
 		
 		// Determine Game Message given Hunter position
 		this.setGameMessage();
 		
 		// End game if Game Message is 'Fell into pit' or 'Walked into Wumpus'
-		if (gameMessage.equals(pitWarning) || gameMessage.equals(wumpusWarning))
+		if (gameMessage.equals(pitWarning) || gameMessage.equals(wumpusWarning) || 
+				gameMessage.equals(arrowLose) || gameMessage.equals(arrowWin))
 		{
 			this.gameOver();
 		}
@@ -389,16 +414,28 @@ public class Map extends Observable {
 			{
 				room = board[row][col];
 				gamePiece = room.getGamePiece();
+				
+				// Print end game result
+				if (gameOver == true)
+				{
+					if (gamePiece == 'X')
+					{
+						room.setVisible();
+						gamePiece = room.getGamePiece();
+						if (gamePiece == ' ')
+							gamePiece = '_';
+					}
+				}
+
 				map += gamePiece;
 
-				if (col == 11)
+				if (col == 11 && row != 11)
 					map += "\n";
 				else
-					map += " ";
+					map += ' ';
+				
 			}
 		}
-		
-		map += gameMessage;
 		
 		return map;
 	}

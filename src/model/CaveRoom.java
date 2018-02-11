@@ -331,6 +331,11 @@ public class CaveRoom {
 		return warning;
 	}
 	
+	public void setVisible()
+	{
+		visible = true;
+	}
+	
 	public boolean noWarning()
 	{
 		// return true if no warning in room

@@ -65,7 +65,7 @@ public class ConsoleView implements Observer {
 					theGame.moveWest();
 					break;
 				case "arrow":
-					theGame.shootArrow(true, sc);
+					//theGame.shootArrow(true, sc); // method changed for Iteration 2
 					break;
 			}
 			
