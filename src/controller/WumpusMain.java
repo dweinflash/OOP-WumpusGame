@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import model.Map;
 import views.TextAreaView;
 import views.ConsoleView;
+import views.ImageView;
 
 public class WumpusMain extends Application {
 
@@ -40,7 +41,7 @@ public class WumpusMain extends Application {
   
   private Observer currentView;
   private Observer textAreaView;
-  //private Observer imageView;
+  private Observer imageView;
   private Observer consoleView;
   
   @Override
@@ -70,8 +71,8 @@ public class WumpusMain extends Application {
     // Set up Iteration 2 views
     textAreaView = new TextAreaView(theGame);
     theGame.addObserver(textAreaView);
-    //imageView = new ImageView(theGame);
-    //theGame.addObserver(imageView);
+    imageView = new ImageView(theGame);
+    theGame.addObserver(imageView);
     
     /** 
     * Console View - Iteration 1
@@ -121,8 +122,8 @@ public class WumpusMain extends Application {
 	      String text = ((MenuItem) e.getSource()).getText();
 	      if (text.equals("Text View"))
 	        setViewTo(textAreaView);
-	      //else if (text.equals("Image View"))
-	      //  setViewTo(textAreaView);
+	      else if (text.equals("Image View"))
+	        setViewTo(imageView);
 	      else if (text.equals("New Game"))
 	        theGame.startNewGame();
   

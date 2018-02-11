@@ -379,6 +379,11 @@ public class Map extends Observable {
 		return gameMessage;
 	}
 	
+	public int[] getHunterPos()
+	{
+		return hunterRoomPos;
+	}
+	
 	@Override
 	public String toString()
 	{

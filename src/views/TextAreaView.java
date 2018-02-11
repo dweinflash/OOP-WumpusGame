@@ -83,7 +83,6 @@ public class TextAreaView extends BorderPane implements Observer {
 			*/
 			
 			// Cardinal direction buttons
-			Font myFont = new Font("Courier", 24);
 			west = new Button();
 			east = new Button();
 			north = new Button();
