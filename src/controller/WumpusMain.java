@@ -74,8 +74,8 @@ public class WumpusMain extends Application {
     imageView = new ImageView(theGame);
     theGame.addObserver(imageView);
     
-    /** 
-    * Console View - Iteration 1
+    // Console View - Iteration 1
+    /**
     * consoleView = new ConsoleView(theGame);
     * theGame.addObserver(consoleView);
     * ((ConsoleView)consoleView).startREPL();

@@ -183,12 +183,30 @@ public class ImageView extends BorderPane implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		CaveRoom room;
+		String gameMessage;
 		char gamePiece;
 		char occupant;
 		char warning;
+		boolean endGame;
 		Image img;
 		int x;
 		int y;
+		
+		String pitWarning = "You fell down a bottomless pit. You lose.\n";
+		String wumpusWarning = "You walked into the Wumpus. You lose.\n";
+		String arrowWin = "Your arrow hit the wumpus. You win.\n";
+		String arrowLose = "You just shot yourself. You lose.\n";
+		
+		endGame = false;
+		gameMessage = theGame.getGameMessage();
+		
+		// Determine game over
+		if (gameMessage.equals(pitWarning) || gameMessage.equals(wumpusWarning)
+				|| gameMessage.equals(arrowWin) || gameMessage.equals(arrowLose))
+		{
+			endGame = true;
+		}
+		
 		
 		// Draw game board
 		for (int r = 0; r < 12; r++)
@@ -203,6 +221,29 @@ public class ImageView extends BorderPane implements Observer {
 				if (gamePiece == 'X')
 				{
 					gc.drawImage(ground, x, y);
+					
+					if (endGame == true)
+					{
+						if (room.noOccupant() == false)
+						{
+							occupant = room.getOccupant();
+							if (occupant == 'P')
+								gc.drawImage(slimePit, x, y);
+							else
+								gc.drawImage(wumpus, x, y);
+						}
+						else if (room.noWarning() == false)
+						{
+							warning = room.getWarning();
+							if (warning == 'B')
+								gc.drawImage(blood, x, y);
+							else if (warning == 'S')
+								gc.drawImage(slime, x, y);
+							else
+								gc.drawImage(goop, x, y);
+						}
+					}
+					
 				}
 				else
 				{
