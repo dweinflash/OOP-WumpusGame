@@ -43,6 +43,12 @@ public class Map extends Observable {
 		
 	public void initializeBoard(boolean random, int numPits)
 	{	
+		/**
+		* Initialize the 12x12 map with Cave Room objects.
+		* Add all occupants and warnings to map.
+		* Follow spec example if random false.
+		*/
+		
 		gameOver = false;
 		arrowShot = false;
 		
@@ -389,8 +395,8 @@ public class Map extends Observable {
 	{
 		/**
 		* Get any Cave Room messages given the Hunter's current position on board.
-		* Display the current board to stdout and any game messages below the board.
 		* If game message is Pit/Wumpus death, set gameOver = true.
+		* Display the current board to stdout.
 		*/
 		
 		String pitWarning = "You fell down a bottomless pit. You lose.\n";

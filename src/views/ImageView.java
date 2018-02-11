@@ -21,7 +21,7 @@ import model.Map;
 /**
  * @author - David Weinflash
  * 
- * This class will import all .png images and pass them to the map.
+ * This class will import all .png images and pass them to the map (canvas).
  * Images will be placed on the map according to the board's current layout in Map.java.
  * ImageView will adjust as Map.java adjusts with gameplay.
  */
@@ -51,6 +51,12 @@ public class ImageView extends BorderPane implements Observer {
 	
 	public ImageView(Map board)
 	{
+		/**
+		* Set up the scene with a Canvas for Game Board and four buttons
+		* in grid for Arrow Shoot. Event handlers for buttons match TextAreaView
+		* event handler.
+		*/
+		
 		// initialize the game objects
 		theGame = board;
 		gameBoard = theGame.getBoard();
@@ -123,7 +129,12 @@ public class ImageView extends BorderPane implements Observer {
 	
 	public void initializeBoard()
 	{
-    	int[] hunterPos = new int[2]; 
+		/**
+		* Draw new board on Canvas for each New Game.
+		* First draw all Ground images, then draw Hunter in visible Cave Room.
+		*/
+		
+		int[] hunterPos = new int[2]; 
 		int x;
     	int y;
     	
@@ -182,6 +193,12 @@ public class ImageView extends BorderPane implements Observer {
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		
+		/**
+		 * After move made on board, Map will update ImageView.
+		 * With update, display new board and determine if game over.
+		 */
+		
 		CaveRoom room;
 		String gameMessage;
 		char gamePiece;
@@ -192,6 +209,7 @@ public class ImageView extends BorderPane implements Observer {
 		int x;
 		int y;
 		
+		// Game Messages - All end game
 		String pitWarning = "You fell down a bottomless pit. You lose.\n";
 		String wumpusWarning = "You walked into the Wumpus. You lose.\n";
 		String arrowWin = "Your arrow hit the wumpus. You win.\n";
@@ -200,7 +218,7 @@ public class ImageView extends BorderPane implements Observer {
 		endGame = false;
 		gameMessage = theGame.getGameMessage();
 		
-		// Determine game over
+		// Determine if game over
 		if (gameMessage.equals(pitWarning) || gameMessage.equals(wumpusWarning)
 				|| gameMessage.equals(arrowWin) || gameMessage.equals(arrowLose))
 		{
@@ -218,12 +236,15 @@ public class ImageView extends BorderPane implements Observer {
 				room = gameBoard[r][c];
 				gamePiece = room.getGamePiece();
 				
+				// Draw Ground
 				if (gamePiece == 'X')
 				{
 					gc.drawImage(ground, x, y);
 					
+					// If game over, show any game pieces above ground
 					if (endGame == true)
 					{
+						// Occupant in Cave Room
 						if (room.noOccupant() == false)
 						{
 							occupant = room.getOccupant();
@@ -232,6 +253,7 @@ public class ImageView extends BorderPane implements Observer {
 							else
 								gc.drawImage(wumpus, x, y);
 						}
+						// Warning in Cave Room
 						else if (room.noWarning() == false)
 						{
 							warning = room.getWarning();
@@ -245,6 +267,7 @@ public class ImageView extends BorderPane implements Observer {
 					}
 					
 				}
+				// Draw visible Cave Room
 				else
 				{
 					gc.fillRect(x, y, 50, 50);

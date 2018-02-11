@@ -21,7 +21,8 @@ import model.Map;
 
 /**
  * This TextAreaView provides a text area for the player to input moves.
- * The view includes a text area, text fields cardinal direction buttons to shoot an arrow.
+ * The view includes a text area, text fields and cardinal direction buttons 
+ * to shoot an arrow.
  * 
  * @author David Weinflash
  */
@@ -36,10 +37,16 @@ public class TextAreaView extends BorderPane implements Observer {
 	private Button east;
 	private Button north;
 	private Button south;
-	private Font myFont;
+	private Font myFont; //mono-space font
 	
 	public TextAreaView(Map board)
 	{
+		/**
+		* Set up the scene with a Text Area for Game Board and four buttons
+		* in grid for Arrow Shoot. Event handlers for buttons match ImageView
+		* event handler.
+		*/
+		
 		theGame = board;
 		
 		// Game Message
@@ -79,7 +86,8 @@ public class TextAreaView extends BorderPane implements Observer {
 	private void initializePane() {
 		    
 			/**
-			* Add button handler to direction button to register arrow move.
+			* Add button handlers to each direction button to register 
+			* arrow moves. Add each button to grid like a compass.
 			*/
 			
 			// Cardinal direction buttons
@@ -120,8 +128,8 @@ public class TextAreaView extends BorderPane implements Observer {
 	private class ButtonListener implements EventHandler<ActionEvent> {
 
 			/**
-			* Shoot arrow in direction represented by button
-			* If a player wins, indicate winner in Game Message
+			* Shoot arrow in direction represented by button.
+			* If a player wins, indicate winner in Game Message.
 			*/
 		  
 		@Override
@@ -154,6 +162,12 @@ public class TextAreaView extends BorderPane implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		
+		/**
+		 * After move made on board, Map will update TextAreaView.
+		 * With update, display new board and determine if game over.
+		 */
+		
+		// Warning and Game Over messages
 		String boardMessage = theGame.getGameMessage();
 		
 		if (boardMessage.equals(""))
@@ -161,6 +175,7 @@ public class TextAreaView extends BorderPane implements Observer {
 		
 		gameMsg.setText(boardMessage);
 		
+		// Print board to TextArea
 		textArea.setText(theGame.toString());
 	}
 

@@ -81,6 +81,7 @@ public class WumpusMain extends Application {
     * ((ConsoleView)consoleView).startREPL();
     */
     
+    // Show GUI with Text Area View
     setViewTo(textAreaView);
     scene.setOnKeyPressed(new KeyListener());
     stage.setScene(scene);
@@ -88,12 +89,20 @@ public class WumpusMain extends Application {
   }
   
   private void setupMenus() {
+	  
+		/**
+		* Construct a menu for Iteration 2 of Hunt the Wumpus.
+		* Add the views Text View and Image View under Views in menu.
+		* Add New Game option under Options in menu.
+		*/
+	  
 	    // Views menu options
 	    Menu views = new Menu("Views");
 	    MenuItem textView = new MenuItem("Text View");
 	    MenuItem imageView = new MenuItem("Image View");
 	    views.getItems().addAll(textView, imageView);
 
+	    // New game option
 	    MenuItem newGame = new MenuItem("New Game");
 	    Menu options = new Menu("Options");
 	    options.getItems().addAll(newGame, views);
@@ -109,7 +118,9 @@ public class WumpusMain extends Application {
 	  }
   
   private void setViewTo(Observer newView) {
-	    window.setCenter(null);
+	    // Change the view of the GUI
+	  	
+	  	window.setCenter(null);
 	    currentView = newView;
 	    window.setCenter((Node) currentView);
 	  }
@@ -119,7 +130,8 @@ public class WumpusMain extends Application {
 	    @Override
 	    public void handle(ActionEvent e) {
 	      // Find out the text of the JMenuItem that was just clicked
-	      String text = ((MenuItem) e.getSource()).getText();
+	      
+	    	String text = ((MenuItem) e.getSource()).getText();
 	      if (text.equals("Text View"))
 	        setViewTo(textAreaView);
 	      else if (text.equals("Image View"))

@@ -22,6 +22,7 @@ public class ConsoleView implements Observer {
 	public ConsoleView(Map board)
 	{
 		// Display the current Map passed in to stdout.
+		
 		theGame = board;
 		System.out.println(theGame);
 		endREPL = false;

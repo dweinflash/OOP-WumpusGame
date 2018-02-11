@@ -305,6 +305,7 @@ public class CaveRoom {
 	public void setWarning(char sign)
 	{
 		// set to Goop if warning in current room is Blood and sign is Slime
+		
 		if (warning == 'B' && sign == 'S')
 			warning = 'G';
 		else
@@ -349,6 +350,7 @@ public class CaveRoom {
 	public boolean noWarning()
 	{
 		// return true if no warning in room
+		
 		if (warning == ' ')
 			return true;
 		else
@@ -358,6 +360,7 @@ public class CaveRoom {
 	public boolean noOccupant()
 	{
 		// return true if no occupant in room
+		
 		if (occupant == ' ')
 			return true;
 		else
