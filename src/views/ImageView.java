@@ -3,6 +3,8 @@ package views;
 import java.util.Observable;
 import java.util.Observer;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -101,6 +103,13 @@ public class ImageView extends BorderPane implements Observer {
 		rightGrid.add(west, 0, 1);
 		rightGrid.add(east, 2, 1);
 		
+		// Add event handler to buttons
+		ButtonListener handler = new ButtonListener();
+		west.setOnAction(handler);
+		east.setOnAction(handler);
+		south.setOnAction(handler);
+		north.setOnAction(handler);
+		
 	    BorderPane.setAlignment(rightGrid, Pos.CENTER_RIGHT);
 	    BorderPane.setMargin(rightGrid, new Insets(0, 10, 0, 0));
     	
@@ -135,13 +144,109 @@ public class ImageView extends BorderPane implements Observer {
     	x = hunterPos[1]*50;
     	gc.fillRect(x, y, 50, 50);
     	gc.drawImage(hunter, x, y);
+	}
+	
+	private class ButtonListener implements EventHandler<ActionEvent> {
 
+		/**
+		* Shoot arrow in direction represented by button
+		* If a player wins, indicate winner in Game Message
+		*/
+	  
+	@Override
+	public void handle(ActionEvent e) 
+	{
+		// Get direction from source button
+		// Fire arrow in appropriate direction
+		
+		String dir = ((Button) e.getSource()).getText();
+		
+		switch(dir)
+		{
+			case "N":
+				theGame.shootArrow(dir);
+				break;
+			case "S":
+				theGame.shootArrow(dir);
+				break;
+			case "E":
+				theGame.shootArrow(dir);
+				break;
+			case "W":
+				theGame.shootArrow(dir);
+				break;
+		}
+	}
+	  
 	}
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+		CaveRoom room;
+		char gamePiece;
+		char occupant;
+		char warning;
+		Image img;
+		int x;
+		int y;
 		
+		// Draw game board
+		for (int r = 0; r < 12; r++)
+		{
+			y = r*50;
+			for (int c = 0; c < 12; c++)
+			{
+				x = c*50;
+				room = gameBoard[r][c];
+				gamePiece = room.getGamePiece();
+				
+				if (gamePiece == 'X')
+				{
+					gc.drawImage(ground, x, y);
+				}
+				else
+				{
+					gc.fillRect(x, y, 50, 50);
+					// Hunter overlaps Pit or Wumpus
+					if (room.getOccOverlap())
+					{
+						occupant = room.getOccupant();
+						if (occupant == 'P')
+							gc.drawImage(slimePit, x, y);
+						else
+							gc.drawImage(wumpus, x, y);
+						
+						gc.drawImage(hunter, x, y);
+					}
+					// Hunter on top of warning
+					else if ((gamePiece == 'O') && (room.noWarning() == false))
+					{
+						warning = room.getWarning();
+						if (warning == 'B')
+							gc.drawImage(blood, x, y);
+						else if (warning == 'S')
+							gc.drawImage(slime, x, y);
+						else
+							gc.drawImage(goop, x, y);
+						
+						gc.drawImage(hunter, x, y);
+					}
+					// Draw non overlapping game piece
+					else
+					{
+						if (gamePiece == 'O')
+							gc.drawImage(hunter, x, y);
+						else if (gamePiece == 'B')
+							gc.drawImage(blood, x, y);
+						else if (gamePiece == 'S')
+							gc.drawImage(slime, x, y);
+						else if (gamePiece == 'G')
+							gc.drawImage(goop, x, y);
+					}
+				}
+				
+			}
+		}
 	}
 
 }

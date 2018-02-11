@@ -35,7 +35,7 @@ public class CaveRoom {
 		warningMessage = "";
 		occOverlap = false;
 	}
-	
+
 	private void setGamePiece()
 	{
 		/** Set the piece to represent the CaveRoom.
@@ -334,6 +334,16 @@ public class CaveRoom {
 	public void setVisible()
 	{
 		visible = true;
+	}
+	
+	public boolean getOccOverlap()
+	{
+		return (occOverlap == true);
+	}
+	
+	public char getOccupant()
+	{
+		return occupant;
 	}
 	
 	public boolean noWarning()
