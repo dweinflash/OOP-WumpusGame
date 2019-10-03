@@ -1,5 +1,8 @@
 # wumpus
-Summary: Computer game implemented with two view in JavaFX.\n
-Object: Find the Wumpus monster and defeat with arrows.\n
-IDE: Eclipse\n
-Run: Typically ran from Eclipse via WumpusMain in src\controller
+Summary: Computer game implemented with two view in JavaFX.
+
+Object: Find the Wumpus monster and defeat with arrows.
+
+IDE: Eclipse
+
+Run: Typically ran from Eclipse via the WumpusMain class in src\controller
