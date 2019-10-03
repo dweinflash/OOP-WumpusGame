@@ -5,4 +5,4 @@ Object: Find the Wumpus monster and defeat with arrows.
 
 IDE: Eclipse
 
-Run: Typically ran from Eclipse via the WumpusMain class in src\controller
+Run: Typically ran from Eclipse via the WumpusMain class in src/controller
