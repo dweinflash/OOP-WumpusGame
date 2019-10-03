@@ -1,2 +1,4 @@
 # wumpus
-Implement one of the first computer games with two view in JavaFX
+Summary: Computer game implemented with two view in JavaFX.
+Object: Find the Wumpus monster and defeat with arrows.
+IDE: Eclipse
